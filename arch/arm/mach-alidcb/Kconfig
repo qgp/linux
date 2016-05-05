@@ -1,0 +1,6 @@
+config ARCH_ALIDCB
+	bool "ALICE DCS board"
+	depends on ARCH_MULTI_V4T
+	select CPU_ARM922T
+	help
+	  This enables support for the ALICE DCS board

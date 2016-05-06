@@ -59,6 +59,8 @@ struct mtd_info *do_map_probe(const char *name, struct map_info *map)
 	struct mtd_chip_driver *drv;
 	struct mtd_info *ret;
 
+	pr_info("JKL 1\n");
+
 	drv = get_mtd_chip_driver(name);
 
 	if (!drv && !request_module("%s", name))
@@ -76,6 +78,7 @@ struct mtd_info *do_map_probe(const char *name, struct map_info *map)
 	*/
 	module_put(drv->module);
 
+	pr_info("JKL 2\n");
 	return ret;
 }
 /*

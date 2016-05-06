@@ -208,6 +208,7 @@ static int of_flash_probe(struct platform_device *dev)
 	if (!mtd_list)
 		goto err_flash_remove;
 
+	pr_info("JKL: scan %i devices\n", count);
 	for (i = 0; i < count; i++) {
 		err = -ENXIO;
 		if (of_address_to_resource(dp, i, &res)) {
@@ -218,6 +219,7 @@ static int of_flash_probe(struct platform_device *dev)
 			continue;
 		}
 
+		pr_info ("JKL: scanning %i\n", i);
 		dev_dbg(&dev->dev, "of_flash device: %pR\n", &res);
 
 		err = -EBUSY;
@@ -250,6 +252,9 @@ static int of_flash_probe(struct platform_device *dev)
 			goto err_out;
 		}
 
+		pr_info("JKL: trying simple_map_init: 0x%08x -> 0x%08x (0x%08x), width: %i\n",
+			info->list[i].map.phys, info->list[i].map.virt, info->list[i].map.size,
+			info->list[i].map.bankwidth);
 		simple_map_init(&info->list[i].map);
 
 		/*
@@ -264,6 +269,7 @@ static int of_flash_probe(struct platform_device *dev)
 			info->list[i].map.phys = NO_XIP;
 
 		if (probe_type) {
+		  pr_info("JKL: doing probe...\n");
 			info->list[i].mtd = do_map_probe(probe_type,
 							 &info->list[i].map);
 		} else {
@@ -277,6 +283,7 @@ static int of_flash_probe(struct platform_device *dev)
 				"do_map_probe() failed for type %s\n",
 				 probe_type);
 
+			pr_info("try probing as ROM\n");
 			info->list[i].mtd = do_map_probe("map_rom",
 							 &info->list[i].map);
 		}
@@ -284,6 +291,7 @@ static int of_flash_probe(struct platform_device *dev)
 
 		err = -ENXIO;
 		if (!info->list[i].mtd) {
+		  pr_info("JKL: failure\n");
 			dev_err(&dev->dev, "do_map_probe() failed\n");
 			goto err_out;
 		} else {

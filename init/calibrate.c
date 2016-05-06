@@ -189,9 +189,10 @@ static unsigned long calibrate_delay_converge(void)
 	unsigned long lpj, lpj_base, ticks, loopadd, loopadd_base, chop_limit;
 	int trials = 0, band = 0, trial_in_band = 0;
 
-	pr_info("JKL: delay calibration\n");
-
 	lpj = (1<<12);
+	lpj = (1<<12) * 100;
+	pr_info("JKL: delay calibration skipped!!!\n");
+	return lpj;
 
 	/* wait for "start of" clock tick */
 	ticks = jiffies;

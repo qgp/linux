@@ -48,9 +48,6 @@
 #define PMD_ORDER	2
 #endif
 
-#define SRAM_ADDR 0xa0000000
-#define SRAM_VALUE 0xaffe0000
-
 	.globl	swapper_pg_dir
 	.equ	swapper_pg_dir, KERNEL_RAM_VADDR - PG_DIR_SIZE
 
@@ -88,36 +85,14 @@ ENTRY(stext)
  THUMB(	.thumb			)	@ switch to Thumb now.
  THUMB(1:			)
 
-	ldr r6, =SRAM_ADDR
-	ldr r7, =SRAM_VALUE
-	str r7, [r6]
-
 #ifdef CONFIG_ARM_VIRT_EXT
 	bl	__hyp_stub_install
 #endif
 	@ ensure svc mode and all interrupts masked
 	safe_svcmode_maskall r9
 
-	add r6, r6, #4
-	str r9, [r6]
-	
 	mrc	p15, 0, r9, c0, c0		@ get processor id
-	add r6, r6, #4
-	str r7, [r6]
-	add r6, r6, #4
-	str r9, [r6]
 	bl	__lookup_processor_type		@ r5=procinfo r9=cpuid
-
-	ldr r6, =SRAM_ADDR
-	add r6, r6, #0x20
-	str r7, [r6]
-	add r6, r6, #4
-	str r5, [r6]
-	add r6, r6, #4
-	str r9, [r6]
-	add r6, r6, #4
-	str r7, [r6]
-	
 	movs	r10, r5				@ invalid processor (r5=0)?
  THUMB( it	eq )		@ force fixup-able long branch encoding
 	beq	__error_p			@ yes, error 'p'
@@ -139,11 +114,6 @@ ENTRY(stext)
 	ldr	r8, =PLAT_PHYS_OFFSET		@ always constant in this case
 #endif
 
-	add r7, r7, #1
-	str r7, [r6]
-
-	
-
 	/*
 	 * r1 = machine no, r2 = atags or dtb,
 	 * r8 = phys_offset, r9 = cpuid, r10 = procinfo
@@ -157,8 +127,8 @@ ENTRY(stext)
 #endif
 	bl	__create_page_tables
 
-	add r7, r7, #1
-	str r7, [r6]
+	cmp 	r1, #62
+	moveq 	r1, #0xffffffff
 	/*
 	 * The following calls CPU specific code in a position independent
 	 * manner.  See arch/arm/mm/proc-*.S for details.  r10 = base of

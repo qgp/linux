@@ -191,9 +191,6 @@ ENDPROC(__error_lpae)
 
 __error_p:
 #ifdef CONFIG_DEBUG_LL
-	add r6, r6, #4
-	str r6, [r6]
-
 	adr	r0, str_p1
 	bl	printascii
 	mov	r0, r9
@@ -221,10 +218,6 @@ __error:
 	str	r3, [r0], #4
 	str	r3, [r0], #4
 #endif
-	ldr r6, =SRAM_ADDR
-	ldr r7, =SRAM_VALUE
-	add r6, r6, #0x60
-	str r7, [r6]
 1:	mov	r0, r0
 	b	1b
 ENDPROC(__error)

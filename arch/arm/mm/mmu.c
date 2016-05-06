@@ -952,9 +952,13 @@ static void __init __create_mapping(struct mm_struct *mm, struct map_desc *md,
  */
 static void __init create_mapping(struct map_desc *md)
 {
+  pr_warn("JKL: attempting to create mapping for 0x%08llx at 0x%08lx in user region\n",
+	  (long long)__pfn_to_phys((u64)md->pfn), md->virtual);
+
 	if (md->virtual != vectors_base() && md->virtual < TASK_SIZE) {
 		pr_warn("BUG: not creating mapping for 0x%08llx at 0x%08lx in user region\n",
 			(long long)__pfn_to_phys((u64)md->pfn), md->virtual);
+		pr_warn("vectors_base = 0x%08lx, TASK_SIZE = 0x%08lx\n", vectors_base(), TASK_SIZE);
 		return;
 	}
 
@@ -995,6 +999,7 @@ void __init iotable_init(struct map_desc *io_desc, int nr)
 	svm = early_alloc_aligned(sizeof(*svm) * nr, __alignof__(*svm));
 
 	for (md = io_desc; nr; md++, nr--) {
+	  pr_warn("JKL: create mapping %i\n", nr);
 		create_mapping(md);
 
 		vm = &svm->vm;

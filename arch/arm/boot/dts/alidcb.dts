@@ -4,39 +4,64 @@
     model = "ALICE DCS board";
     compatible = "cern-alice,dcb-164";
 
-    osc: oscillator {
-        #clock-cells = <1>;
-	clock-output-names = "clka", "clkb";
-    };
-
-    cpus {
-        #address-cells = <1>;
-	#size-cells = <0>;
-
-	cpu@0 {
-	    device_type = "cpu";
-	    reg = <0x0>;
-	    compatible = "arm,arm922t";
-	};
-    };
-
     memory {
-        reg = <0x0 0x100>;
+	reg =  <0x00000000 0x10000000>;
+
+ 	config_mem: region@7fffc000 {
+            linux,contiguous-region;
+            linux,default-contiguous-region;
+             reg = <0x7fffc000 0x0004000>;
+ 	};
     };
 
-    ebi@12000000 {
-        compatible = "arm,external-bus-interface";
-        reg = <0x12000000 0x100>;
-    };
- 
-    serial@f00 {
-        compatible = "vendor,some-uart";
-        reg = <0xf00 0x10>;
-    };
+//    memory {
+//        reg = <0x7fffc000 0x00004000>;
+//    };
 
-    chosen {
-        stdout-path = "/serial@f00:57600";
-    };
+//    memory {
+//    	#address-cells = <1>;   
+//	#size-cells = <0>;
+//	reg = <0x7fffc000 0x7fffc000 0x00004000>;
+////	ranges;
+////        // reg = <0x0 0x100>;
+//    };
+
+//    osc: oscillator {
+//        #clock-cells = <1>;
+//	clock-output-names = "clka", "clkb";
+//    };
+//
+//    soc {
+//        #address-cells = <1>;
+// 	#size-cells = <1>;
+// 	compatible = "simple-bus";
+// 	ranges = <0 0x7fffc000 0x8000000>;
+//    };
+//
+//    cpus {
+//        #address-cells = <1>;
+//	#size-cells = <0>;
+//
+//	cpu@0 {
+//	    device_type = "cpu";
+//	    reg = <0x0>;
+//	    compatible = "arm,arm922t";
+//	};
+//    };
+//
+//    ebi@12000000 {
+//        compatible = "arm,external-bus-interface";
+//        reg = <0x12000000 0x100>;
+//    };
+// 
+//    serial@f00 {
+//        compatible = "vendor,some-uart";
+//        reg = <0xf00 0x10>;
+//    };
+//
+//    chosen {
+//        stdout-path = "/serial@f00:57600";
+//    };
 
     // wdt
 

@@ -189,12 +189,19 @@ static unsigned long calibrate_delay_converge(void)
 	unsigned long lpj, lpj_base, ticks, loopadd, loopadd_base, chop_limit;
 	int trials = 0, band = 0, trial_in_band = 0;
 
+	pr_info("JKL: delay calibration\n");
+
 	lpj = (1<<12);
 
 	/* wait for "start of" clock tick */
 	ticks = jiffies;
-	while (ticks == jiffies)
+	int i = 0;
+	while (ticks == jiffies) {
+	  ++i;
+	  if (i % 1000000 == 0)
+	    pr_info("waiting for jiffies to change...\n");
 		; /* nothing */
+	}
 	/* Go .. */
 	ticks = jiffies;
 	do {
@@ -214,6 +221,8 @@ static unsigned long calibrate_delay_converge(void)
 	lpj_base = lpj * trials;
 
 recalibrate:
+	pr_info("JKL: recalibrating...\n");
+
 	lpj = lpj_base;
 	loopadd = loopadd_base;
 
@@ -243,6 +252,8 @@ recalibrate:
 		loopadd_base <<= 2;
 		goto recalibrate;
 	}
+
+	pr_info("JKL: delay calibrated\n");
 
 	return lpj;
 }

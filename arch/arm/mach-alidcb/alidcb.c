@@ -27,8 +27,7 @@ static void __init alidcb_dt_init(void)
 }
 
 static const char *const alidcb_dt_compat[] = {
-  "vendor,soc-model1",
-  "vendor,soc-model2",
+  "cern-alice,dcb-164",
   NULL,
 };
 

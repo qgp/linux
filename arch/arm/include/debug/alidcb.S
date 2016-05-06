@@ -15,15 +15,15 @@
 
 	.macro	addruart, rp, rv, tmp
 	ldr	\rp, =EXC_UART00_BASE
-	ldr	\rv, =0xa0000000
+	ldr	\rv, =EXC_UART00_BASE
 	.endm
 
 	.macro	store, rd, rx:vararg
-	strb	\rd, \rx
+	str	\rd, \rx
 	.endm
 
 	.macro	load, rd, rx:vararg
-	ldrb	\rd, \rx
+	ldr	\rd, \rx
 	.endm
 	
 	.macro	senduart,rd,rx
@@ -31,14 +31,18 @@
 	.endm
 
 	.macro	busyuart,rd,rx
-@1002:	load	\rd, [\rx, #UART_RSR]
-@	and	\rd, \rd, #0xf
-@	teq	\rd, #0
-@	bne	1002b
+1002:	load	\rd, [\rx, #UART_RSR]
+	and	\rd, \rd, #0xf
+	teq	\rd, #0
+	bne	1002b
+	ldr \rd, =0x10000
+1003:	sub \rd, \rd, #1
+	cmp \rd, #0
+	bne 1003b
 	.endm
 
 	.macro	waituart,rd,rx
-@1001:	load	\rd, [\rx, #UART_MSR]
-@	tst	\rd, #0x10
-@	beq	1001b
+1001:	load	\rd, [\rx, #UART_MSR]
+	tst	\rd, #0x10
+	bne	1001b
 	.endm

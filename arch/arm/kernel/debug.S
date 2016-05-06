@@ -79,9 +79,19 @@ hexbuf:		.space 16
 
 ENTRY(printascii)
 		addruart_current r3, r1, r2
+@	ldr r5, =0x7fffc280
+@	ldr r6, =0xa0000040
+@	ldr r7, =0xdeadbeef
+@	str r7, [r6]
+@	add r6, #4
+@	str r3, [r6]
+@	add r6, #4
 		b	2f
 1:		waituart r2, r3
 		senduart r1, r3
+@	str r1, [r6]
+@	add r6, #4
+@	str r1, [r5, #0x10]
 		busyuart r2, r3
 		teq	r1, #'\n'
 		moveq	r1, #'\r'

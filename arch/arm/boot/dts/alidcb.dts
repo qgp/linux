@@ -7,15 +7,25 @@
     #address-cells = <1>;
     #size-cells = <1>;
 
+    uart0 {
+        compatible = "arm,epxa-uart";
+    };
+
+    timer {
+        compatible = "arm,epxa-timer";
+    };
+
+    interrupt-controller {
+        compatible = "arm,epxa-ictlr";
+	interrupt-controller;
+    };
+
     flash@0x40000000 {
         compatible = "cfi-flash";
         #address-cells = <1>;
 	#size-cells = <1>;
 	bank-width = <2>;
-//	device-width = <1>;
 	reg = <0x40000000 0x00800000>;
-
-//        linux,mtd-name = "test";
 
 	partitions {
 	    compatible = "fixed-partitions";
@@ -43,28 +53,6 @@
 	    };
 	};
     };
-
-//    memory {
-//	reg =  <0x00000000 0x10000000>;
-//
-// 	config_mem: region@7fffc000 {
-//            linux,contiguous-region;
-//            linux,default-contiguous-region;
-//             reg = <0x7fffc000 0x0004000>;
-// 	};
-//    };
-
-//    memory {
-//        reg = <0x7fffc000 0x00004000>;
-//    };
-
-//    memory {
-//    	#address-cells = <1>;   
-//	#size-cells = <0>;
-//	reg = <0x7fffc000 0x7fffc000 0x00004000>;
-////	ranges;
-////        // reg = <0x0 0x100>;
-//    };
 
 //    osc: oscillator {
 //        #clock-cells = <1>;

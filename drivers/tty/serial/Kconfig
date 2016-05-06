@@ -18,6 +18,21 @@ source "drivers/tty/serial/8250/Kconfig"
 
 comment "Non-8250 serial port support"
 
+config SERIAL_EPXA_UART00
+	tristate "EPXA UART00 serial port support"
+	depends on ARCH_ALIDCB
+	select SERIAL_CORE
+	help
+	  This selects the support for the EPXA UART00.
+
+config SERIAL_EPXA_UART00_CONSOLE
+	bool "Support for console on EPXA serial port"
+	depends on SERIAL_EPXA_UART00=y
+	select SERIAL_CORE_CONSOLE
+	select SERIAL_EARLYCON
+	---help---
+	  Say Y here if you wish to use an EPXA UART as the system console.
+
 config SERIAL_AMBA_PL010
 	tristate "ARM AMBA PL010 serial port support"
 	depends on ARM_AMBA
